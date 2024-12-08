@@ -849,6 +849,7 @@ exports.getCounsellorSessions = async (req, res) => {
   try {
     const userId = req.params.counsellorId;
     const { page, searchQuery } = req.query;
+    const skipCount = (page - 1) * limit;
     const filter = {
       counsellor: userId,
     };
