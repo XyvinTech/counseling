@@ -1,29 +1,66 @@
-name: Deploy Node.js to Windows Server
+name: Deploy Counselling-Backend to AWS Lightsail (PM2)
 
 on:
   push:
     branches:
-      - main  # Trigger deployment on pushes to the main branch
+      - main
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest  # GitHub-hosted runner (Linux is fine since it just SSHes to the server)
+    name: Deploy to AWS Lightsail with PM2
+    runs-on: ubuntu-latest
+
+    env:
+      LIGHTSAIL_INSTANCE_IP: ${{ secrets.LIGHTSAIL_INSTANCE_IP }}
+      SSH_KEY: ${{ secrets.LIGHTSAIL_PRIVATE_KEY }}
+      USERNAME: ubuntu
+      PROJECT_DIR: /home/ubuntu/counselling-backend
+      ENV_FILE_PATH: counselling/.env/.env
+      APP_NAME: counselling-backend
+      PORT: 3300
 
     steps:
-      # Check out the code from the repository
-      - name: Checkout code
-        uses: actions/checkout@v3  # Use the latest version of the checkout action
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      # Deploy via SSH to the Windows Server
-      - name: Deploy to Windows Server
-        uses: appleboy/ssh-action@v0.1.8  # Using the specific version of the SSH action
+      - name: Deploy to Lightsail
+        uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.SERVER_PUBLIC_IP }}  # Public IP of your Windows server
-          username: ${{ secrets.SERVER_SSH_USERNAME }}  # Your server's SSH username
-          key: ${{ secrets.SSH_PRIVATE_KEY }}  # Your private SSH key (ensure it has no passphrase)
-          port: ${{ secrets.SERVER_PORT }}  # SSH port (usually 22)
+          host: ${{ env.LIGHTSAIL_INSTANCE_IP }}
+          username: ${{ env.USERNAME }}
+          key: ${{ env.SSH_KEY }}
           script: |
-            cd C:/cbs-councelling-app/counseling-backend  # Path to your Node.js app on the server
-            git pull origin main  # Pull latest code from GitHub
-            npm install  # Install/update dependencies
-            npm start  # Restart the app using PM2 (if you're using PM2)
+            # Update system and install Node.js, PM2 if not installed
+            sudo apt-get update
+            sudo apt-get install -y nodejs npm
+
+            # Install PM2 globally if not installed
+            if ! command -v pm2 &> /dev/null; then
+              sudo npm install -g pm2
+            fi
+
+            # Clone the repository or pull the latest changes
+            if [ -d "${{ env.PROJECT_DIR }}" ]; then
+              cd ${{ env.PROJECT_DIR }}
+              git pull origin main
+            else
+              git clone https://github.com/${{ github.repository }} ${{ env.PROJECT_DIR }}
+              cd ${{ env.PROJECT_DIR }}
+            fi
+
+            # Install dependencies
+            npm install
+
+            # Ensure the environment file exists
+            if [ ! -f "${{ env.PROJECT_DIR }}/${{ env.ENV_FILE_PATH }}" ]; then
+              echo ".env file is missing at ${{ env.PROJECT_DIR }}/${{ env.ENV_FILE_PATH }}"
+              exit 1
+            fi
+
+            # Copy the .env file to the root of the project if necessary
+            cp ${{ env.ENV_FILE_PATH }} .env
+
+            # Restart the application with PM2
+            pm2 delete ${{ env.APP_NAME }} || true
+            pm2 start npm --name ${{ env.APP_NAME }} -- run start
+            pm2 save
