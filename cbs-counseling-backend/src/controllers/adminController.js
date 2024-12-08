@@ -786,6 +786,7 @@ exports.getUserSessions = async (req, res) => {
   try {
     const { userId } = req.params;
     const { page, searchQuery } = req.query;
+    const skipCount = (page - 1) * limit;
     const filter = {
       user: userId,
     };
