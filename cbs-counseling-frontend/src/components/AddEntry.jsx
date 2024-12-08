@@ -29,6 +29,7 @@ import StyledInput from "../ui/StyledInput";
 import { toast } from "react-toastify";
 import { upload } from "../api/admin/adminapi";
 import StyledUploadImage from "../ui/StyledUploadImage";
+
 export default function AddEntry() {
   const {
     control,
@@ -41,6 +42,7 @@ export default function AddEntry() {
   const location = useLocation();
   const { id } = useParams();
   const navigate = useNavigate();
+  const URL = import.meta.env.VITE_API_IMAGE_URL;
   const { slots, timeSlot, days, allSlot } = useTimeStore();
   const { counselors, allCounselors, showBackButton, setShowBackButton } =
     useCounselorStore();
@@ -197,7 +199,7 @@ export default function AddEntry() {
       setValue("interactions", rowData?.interactions);
     }
   }, [rowData, setValue]);
-  const reportUrl = `https://able.iswkoman.com/images/${rowData?.report}`;
+  const reportUrl = `${URL}${rowData?.report}`;
   return (
     <>
       <Box
@@ -294,7 +296,9 @@ export default function AddEntry() {
                             fontWeight={500}
                             color={"#0072bc"}
                           >
-                            {rowData?.user?.designation}{''}{rowData?.user?.division}
+                            {rowData?.user?.designation}
+                            {""}
+                            {rowData?.user?.division}
                           </Typography>
                         </TableCell>
                       </TableRow>
@@ -560,7 +564,8 @@ export default function AddEntry() {
               <Grid item md={6}>
                 {" "}
                 <Stack
-                  spacing={2}  sx={{
+                  spacing={2}
+                  sx={{
                     borderRadius: "15px",
                     bgcolor: "white",
                     boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.1)",

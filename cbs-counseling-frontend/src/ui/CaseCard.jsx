@@ -8,8 +8,9 @@ const CaseCard = ({ data }) => {
     return moment.tz(dateString, "Asia/Muscat").format(format);
   };
   const { counselor } = useAuthStore();
+  const URL = import.meta.env.VITE_API_IMAGE_URL;
   const userType = localStorage.getItem("userType");
-  const reportUrl = `https://able.iswkoman.com/images/${data?.report}`;
+  const reportUrl = `${URL}${data?.report}`;
   return (
     <Stack bgcolor={"white"}
             borderRadius={"15px"}
@@ -53,11 +54,11 @@ const CaseCard = ({ data }) => {
         </Typography>
         <Stack>
           <Typography variant="h6" color={"#23262F"}>
-            {data?.session_date ? formatDate(data.session_date) : "-"}
+            {data?.session_date ? formatDate(data?.session_date) : "-"}
           </Typography>
           <Typography variant="h6" color={"#23262F"}>
             {data?.session_time
-              ? `${data.session_time.start} - ${data.session_time.end}`
+              ? `${data?.session_time?.start} - ${data?.session_time?.end}`
               : "-"}
           </Typography>
         </Stack>
@@ -127,15 +128,15 @@ const CaseCard = ({ data }) => {
           </Typography>
           <Typography variant="h6" color={"#23262F"}>
             {" "}
-            {data?.case_id?.referer.some((ref) => ref.name === counselor?.name)
+            {data?.case_id?.referer?.some((ref) => ref?.name === counselor?.name)
               ? "-"
-              : data?.case_id?.referer.map((ref) => ref.name).join(", ")}
+              : data?.case_id?.referer?.map((ref) => ref?.name)?.join(", ")}
           </Typography>
         </Stack>
       )}
       {userType !== "student" &&
         data?.case_id?.referer_remark?.some(
-          (ref) => ref.name !== counselor?.name
+          (ref) => ref?.name !== counselor?.name
         ) && (
           <Stack padding={2}>
             <Typography variant="h6" color={"#828282"}>
@@ -143,10 +144,9 @@ const CaseCard = ({ data }) => {
             </Typography>
             <Stack spacing={1}>
               {data?.case_id?.referer_remark
-                ?.filter((ref) => ref.name !== counselor?.name)
-                .map((ref, index) => (
+                ?.filter((ref) => ref?.name !== counselor?.name)?.map((ref, index) => (
                   <Typography key={index} variant="body1" color={"#23262F"}>
-                    <strong>{ref.name}:</strong> {ref.remark}
+                    <strong>{ref?.name}:</strong> {ref?.remark}
                   </Typography>
                 ))}
             </Stack>

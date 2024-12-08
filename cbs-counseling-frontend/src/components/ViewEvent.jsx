@@ -3,6 +3,7 @@ import { Dialog, Grid, Typography } from "@mui/material";
 import moment from "moment";
 
 const ViewEvent = ({ open, onClose, rowData }) => {
+  const URL = import.meta.env.VITE_API_IMAGE_URL;
   return (
     <Dialog
       open={open}
@@ -17,7 +18,7 @@ const ViewEvent = ({ open, onClose, rowData }) => {
         <Grid item xs={12}>
           {rowData?.requisition_image ? (
             <img
-              src={`https://able.iswkoman.com/images/${rowData?.requisition_image}`}
+              src={`${URL}${rowData?.requisition_image}`}
               alt="Event"
               style={{
                 maxWidth: "400px",
