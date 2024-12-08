@@ -55,7 +55,7 @@ const StudentSinglePage = () => {
   const sessions = [
     { title: "Session Date", field: "session_date" },
     { title: "Session Time", field: "session_time" },
-    { title: "Session Name", field: "name" },
+    // { title: "Session Name", field: "name" },
     { title: "Counselor Name", field: "counsellor_name" },
     { title: "Counseling Type", field: "counsellor_type" },
   ];
