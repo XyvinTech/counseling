@@ -20,7 +20,7 @@ jobs:
       PORT: 3300
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Deploy to Lightsail
@@ -30,12 +30,18 @@ jobs:
           username: ${{ env.USERNAME }}
           key: ${{ env.SSH_KEY }}
           script: |
-            # Remove existing Node.js and npm
-            sudo apt-get remove -y nodejs npm || true
+            # Remove existing Node.js and conflicting packages
+            sudo apt-get remove --purge -y nodejs npm libnode72
+            sudo apt-get autoremove -y
+            sudo apt-get clean
 
-            # Install Node.js from NodeSource (version 18)
+            # Install Node.js 18 from NodeSource
             curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
             sudo apt-get install -y nodejs
+
+            # Verify Node.js and npm installation
+            node -v
+            npm -v
 
             # Install PM2 globally if not installed
             if ! command -v pm2 &> /dev/null; then
@@ -83,7 +89,7 @@ jobs:
       USERNAME: ubuntu
 
     steps:
-      - name: Checkout Repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Install Node.js
