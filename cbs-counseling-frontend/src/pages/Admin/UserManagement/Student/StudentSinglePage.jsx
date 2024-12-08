@@ -47,10 +47,10 @@ const StudentSinglePage = () => {
     let filter = {};
     filter.page = pageNo;
     filter.limit = row;
-    if (counselor?.StudentReferencesCode) {
-      fetchSession(counselor?.StudentReferencesCode, filter);
+    if (id) {
+      fetchSession(id, filter);
     }
-  }, [counselor?.StudentReferencesCode, pageNo, row]);
+  }, [id, pageNo, row]);
 
   const sessions = [
     { title: "Session Date", field: "session_date" },
