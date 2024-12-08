@@ -62,6 +62,7 @@ jobs:
             ls -la
 
             # Install dependencies
+            cd cbs-counseling-backend 
             npm install
 
             # Ensure the environment file exists
