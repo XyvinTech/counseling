@@ -897,13 +897,19 @@ exports.getCounsellorCases = async (req, res) => {
   try {
     const userId = req.params.counsellorId;
     const { page, searchQuery } = req.query;
-    const filter = {
-      "session_ids.counsellor": userId,
-    };
+    const filter = {};
     if (searchQuery) {
       filter.$or = [{ "user.name": { $regex: searchQuery, $options: "i" } }];
     }
-    const cases = await Case.find(filter).populate("user");
+    const cases = await Case.find(filter)
+      .populate("user")
+      .populate({
+        path: "session_ids",
+        populate: {
+          path: "counsellor",
+          match: { _id: userId },
+        },
+      });
     const mappedData = cases.map((case_) => {
       return {
         id: case_.id,
