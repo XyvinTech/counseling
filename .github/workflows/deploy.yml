@@ -20,7 +20,7 @@ jobs:
       PORT: 3300
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Deploy to Lightsail
@@ -30,9 +30,12 @@ jobs:
           username: ${{ env.USERNAME }}
           key: ${{ env.SSH_KEY }}
           script: |
-            # Update system and install Node.js, PM2 if not installed
-            sudo apt-get update
-            sudo apt-get install -y nodejs npm
+            # Remove existing Node.js and npm
+            sudo apt-get remove -y nodejs npm || true
+
+            # Install Node.js from NodeSource (version 18)
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get install -y nodejs
 
             # Install PM2 globally if not installed
             if ! command -v pm2 &> /dev/null; then
@@ -48,17 +51,21 @@ jobs:
               cd ${{ env.PROJECT_DIR }}
             fi
 
+            # Verify the contents of the project directory
+            echo "Listing project directory contents:"
+            ls -la
+
             # Install dependencies
             npm install
 
             # Ensure the environment file exists
-            if [ ! -f "$${{ env.ENV_FILE_PATH }}" ]; then
+            if [ ! -f "${{ env.ENV_FILE_PATH }}" ]; then
               echo ".env file is missing at ${{ env.ENV_FILE_PATH }}"
               exit 1
+            else
+              echo ".env file found. Copying to project root."
+              cp ${{ env.ENV_FILE_PATH }} .env
             fi
-
-            # Copy the .env file to the root of the project if necessary
-            cp ${{ env.ENV_FILE_PATH }} .env
 
             # Restart the application with PM2
             pm2 delete ${{ env.APP_NAME }} || true
@@ -76,7 +83,7 @@ jobs:
       USERNAME: ubuntu
 
     steps:
-      - name: Checkout Code
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
       - name: Install Node.js
