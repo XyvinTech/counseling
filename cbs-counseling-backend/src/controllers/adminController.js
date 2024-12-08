@@ -785,7 +785,7 @@ exports.listController = async (req, res) => {
 exports.getUserSessions = async (req, res) => {
   try {
     const { userId } = req.params;
-    const { page, searchQuery } = req.query;
+    const { page, searchQuery, limit = 10 } = req.query;
     const skipCount = (page - 1) * limit;
     const filter = {
       user: userId,
