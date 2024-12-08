@@ -93,7 +93,7 @@ export default function AddEntry() {
   };
   const options =
     counselors && Array.isArray(counselors)
-      ? counselors.map((list) => ({
+      ? counselors?.map((list) => ({
           value: list?.id,
           label: list?.name,
         }))
@@ -131,6 +131,7 @@ export default function AddEntry() {
           return; // Exit if image upload fails
         }
       }
+      console.log("pdfUrl", pdfUrl);
       const formData = {
         details: data?.details,
         report: pdfUrl ? pdfUrl : "",
@@ -420,7 +421,7 @@ export default function AddEntry() {
                         </TableCell>
                       </TableRow>
                       {rowData?.case_details_array &&
-                        rowData.case_details_array.filter(
+                        rowData?.case_details_array?.filter(
                           (detail) => detail !== null
                         ).length > 0 && (
                           <TableRow>
@@ -439,7 +440,7 @@ export default function AddEntry() {
                                 color={"#333333"}
                               >
                                 {rowData?.case_details_array &&
-                                rowData.case_details_array.length > 0 ? (
+                                rowData?.case_details_array?.length > 0 ? (
                                   <ul
                                     style={{
                                       margin: 0,
@@ -447,7 +448,7 @@ export default function AddEntry() {
                                       listStyleType: "none",
                                     }}
                                   >
-                                    {rowData.case_details_array.map(
+                                    {rowData?.case_details_array?.map(
                                       (detail, index) => (
                                         <li
                                           key={index}
@@ -467,10 +468,10 @@ export default function AddEntry() {
                         )}
                       {console.log(rowData)}
 
-                      {rowData?.case_id.referer_remark &&
-                        rowData.case_id.referer_remark.filter(
+                      {rowData?.case_id?.referer_remark &&
+                        rowData?.case_id?.referer_remark?.filter(
                           (remark) => remark !== null
-                        ).length > 0 && (
+                        )?.length > 0 && (
                           <TableRow>
                             <TableCell colSpan={2}>
                               <Typography
@@ -493,14 +494,14 @@ export default function AddEntry() {
                                     listStyleType: "none",
                                   }}
                                 >
-                                  {rowData.case_id.referer_remark.map(
+                                  {rowData?.case_id?.referer_remark?.map(
                                     (remark, index) => (
                                       <li
                                         key={index}
                                         style={{ paddingBottom: 4 }}
                                       >
-                                        <strong>{remark.name}:</strong>{" "}
-                                        {remark.remark}
+                                        <strong>{remark?.name}:</strong>{" "}
+                                        {remark?.remark}
                                       </li>
                                     )
                                   )}

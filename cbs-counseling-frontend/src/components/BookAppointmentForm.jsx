@@ -64,7 +64,7 @@ export default function AddMeeting() {
 
   const options =
     counselors && Array.isArray(counselors)
-      ? counselors.map((list) => ({
+      ? counselors?.map((list) => ({
           value: list?.id,
           label: list?.name,
         }))
