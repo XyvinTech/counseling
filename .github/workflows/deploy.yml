@@ -15,7 +15,7 @@ jobs:
       SSH_KEY: ${{ secrets.LIGHTSAIL_PRIVATE_KEY }}
       USERNAME: ubuntu
       PROJECT_DIR: /home/ubuntu/counselling-backend
-      ENV_FILE_PATH: cbs-counseling-backend/.env/.env
+      ENV_FILE_PATH: counseling-backend/.env/.env
       APP_NAME: counselling-backend
       PORT: 3300
 
