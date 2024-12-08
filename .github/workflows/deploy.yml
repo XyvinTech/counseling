@@ -15,7 +15,7 @@ jobs:
       SSH_KEY: ${{ secrets.LIGHTSAIL_PRIVATE_KEY }}
       USERNAME: ubuntu
       PROJECT_DIR: /home/ubuntu/counselling-backend
-      ENV_FILE_PATH: .env/.env
+      ENV_FILE_PATH: /home/ubuntu/counseling/.env/.env
       APP_NAME: counselling-backend
       PORT: 3300
 
@@ -52,8 +52,8 @@ jobs:
             npm install
 
             # Ensure the environment file exists
-            if [ ! -f "${{ env.PROJECT_DIR }}/${{ env.ENV_FILE_PATH }}" ]; then
-              echo ".env file is missing at ${{ env.PROJECT_DIR }}/${{ env.ENV_FILE_PATH }}"
+            if [ ! -f "$${{ env.ENV_FILE_PATH }}" ]; then
+              echo ".env file is missing at ${{ env.ENV_FILE_PATH }}"
               exit 1
             fi
 
