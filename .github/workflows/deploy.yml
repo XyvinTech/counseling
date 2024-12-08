@@ -30,15 +30,6 @@ jobs:
           username: ${{ env.USERNAME }}
           key: ${{ env.SSH_KEY }}
           script: |
-            # Remove existing Node.js and conflicting packages
-            sudo apt-get remove --purge -y nodejs npm libnode72
-            sudo apt-get autoremove -y
-            sudo apt-get clean
-
-            # Install Node.js 18 from NodeSource
-            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-            sudo apt-get install -y nodejs
-
             # Verify Node.js and npm installation
             node -v
             npm -v
