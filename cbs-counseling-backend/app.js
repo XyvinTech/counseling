@@ -127,7 +127,6 @@ if ("development" === "development") {
     console.log(`${portMessage}\n${envMessage}`);
   });
 
-  // Create an HTTP server that redirects to HTTPS
   http
     .createServer((req, res) => {
       // Redirect any incoming request to HTTPS
