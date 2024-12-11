@@ -111,7 +111,6 @@ if ("development" === "development") {
     console.log(clc.yellowBright(`✓ Environment: ${NODE_ENV}`));
   });
 } else {
-  // Load the SSL options (private key, certificate, and CA bundle) for production
   const sslOptions = {
     key: fs.readFileSync(path.join(__dirname, "ssl", "private.key")), // Private Key
     cert: fs.readFileSync(path.join(__dirname, "ssl", "certificate.crt")), // Public Certificate
